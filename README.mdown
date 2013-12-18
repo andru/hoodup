@@ -70,7 +70,7 @@ The property on this object which contains the id for the associated object. Def
 The property on the associated object which contains this object's id. Defaults to `[inverse]_id`.
 
 ### Has many options (via an array of ids on this object)
-#### ids
+#### source
 The value of `source` property indicates the name of a property on the model which contains an array of association ids.
 
 ### Many to many through another collection
