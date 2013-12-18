@@ -1,0 +1,85 @@
+#Hoodup
+Autoload your associations!
+
+Hoodup integrates [Backbone](http://backbonejs.com) with [Hoodie](http://http://hood.ie/) and [Supermodel](http://pathable.github.io/supermodel/) to auto-load all data for model associations. Hoodie and Supermodel do all the heavy lifting; Hoodup just skulks around passing notes between them.
+
+##Setup
+To start, call `Hoodup.connect( [url] )` with an optional url argument of the couchdb server. If you want to set it as the default sync adapter, and add the `hoodup` and `hoodie` instances to the Backbone object, call the `Hoodup.attach()` method after.
+
+```
+Hoodup.connect().attach();
+```
+
+##Defining associations
+Hoodup leeches off [SuperModel's](http://pathable.github.io/supermodel/) awesome `has` method for defining associations, so you only need to define your associations once. 
+
+###Evil forker
+I had to patch SuperModel internals a little to get this to work... a pull-request is in the pipes so hopefully we'll be able to rely on SuperModel master soon.  Until then, you'll need to use [this fork](http://github.com/andru/supermodel/optionify-has-chaining), or set up associations manually (boo!).
+On the plus side, this saves you from defining your assocations twice.  You can define them manually if you don't want to use my fork, but I'm not documenting it. Check the source code, it's pretty simple.
+
+
+
+
+## Differences from usual Supermodel associations
+
+### Define a collection for all associations
+A collection must be defined even for a `has one` association. This allows Hoodup to batch load all associations.
+
+`Collection.model` must reference or return the model `constructor`. Since you're defining the collection, you don't have to define the model (Hoodup will do it for you).
+```
+Dog.has().many('bones',{
+	collection: Bones,
+	model: Bone, //Hoodup will grab model from the collection if it's not present
+	inverse: 'owner',
+	source: ''
+});
+
+Bone.has().one('owner',{
+	collection: Dogs,
+	inverse: 'owner',
+	source: 
+});
+```
+
+### Collection.model factory
+Supermodel requires that a collection [defines a model factory](http://pathable.github.io/supermodel/#model.create) which delegates to `Supermodel.Model.create`. Hoodup piles on an additional requirement (sorry): if the factory is called without arguments, it should return the model `constructor` rather than an instance.
+
+```
+var Users = Backbone.Collection.extend({
+
+  model: function(attrs, options) {
+  	if(!attrs){
+  		return User;
+  	}
+    return User.create(attrs, options);
+  }
+
+});
+``` 
+
+### Has one options
+#### id
+The property on this object which contains the id for the associated object. Defaults to `[association name]_id`.
+
+### Has many options (via a property on the other object)
+#### id
+The property on the associated object which contains this object's id. Defaults to `[inverse]_id`.
+
+### Has many options (via an array of ids on this object)
+#### ids
+The value of `source` property indicates the name of a property on the model which contains an array of association ids.
+
+### Many to many through another collection
+I haven't yet done any work on associations which define a `through` collection. Should get it done soon. In the meantime, pull requests are more than welcome!
+
+
+## Behind the scenes
+### Overloads
+#### Supermodel.Model.has
+Hoodup overloads `Supermodel.Model.has` to peek in on the association definitions. If you overload it yourself, be sure to call on up the prototype chain.
+####
+
+
+
+##Credits
+Hoodup is based on [backbone-hoodie](https://github.com/hoodiehq/backbone-hoodie), and of course wouldn't exist without the awesome work on Backbone, Hoodie, and SuperModel by lots of people far smarter than me.
