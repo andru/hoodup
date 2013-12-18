@@ -27,17 +27,21 @@ A collection must be defined even for a `has one` association. This allows Hoodu
 
 `Collection.model` must reference or return the model `constructor`. Since you're defining the collection, you don't have to define the model (Hoodup will do it for you).
 ```
-Dog.has().many('bones',{
-	collection: Bones,
-	model: Bone, //Hoodup will grab model from the collection if it's not present
-	inverse: 'owner',
-	source: ''
+Dog.has().one('owner', {
+	collection: People,
+	model: Person,
+	inverse: 'dogs'
 });
 
-Bone.has().one('owner',{
+Person.has().many('dogs', {
 	collection: Dogs,
+	inverse: 'owner'
+})
+
+Dog.has().many('bones',{
+	collection: Bones,
 	inverse: 'owner',
-	source: 
+	id: 'owned_by' //defaults to owner_id
 });
 ```
 
@@ -77,7 +81,6 @@ I haven't yet done any work on associations which define a `through` collection.
 ### Overloads
 #### Supermodel.Model.has
 Hoodup overloads `Supermodel.Model.has` to peek in on the association definitions. If you overload it yourself, be sure to call on up the prototype chain.
-####
 
 
 

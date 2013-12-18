@@ -1,3 +1,8 @@
+/*
+Hoodup v0.1.0
+
+Andru Vallance andru@tinymighty.com
+*/
 (function (root, factory) {
 
 	'use strict';
