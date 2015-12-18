@@ -1,5 +1,7 @@
 #Hoodup
-Autoload your associations!
+Autoload your associations! 
+
+*This repo is not maintained*
 
 Hoodup integrates [Backbone](http://backbonejs.com) with [Hoodie](http://http://hood.ie/) and [Supermodel](http://pathable.github.io/supermodel/) to auto-load all data for model associations. Hoodie and Supermodel do all the heavy lifting; Hoodup just skulks around passing notes between them.
 
@@ -12,12 +14,6 @@ Hoodup.connect().attach();
 
 ##Defining associations
 Hoodup leeches off [SuperModel's](http://pathable.github.io/supermodel/) awesome `has` method for defining associations, so you only need to define your associations once. 
-
-###Evil forker
-I had to patch SuperModel internals a little to get this to work... a pull-request is in the pipes so hopefully we'll be able to rely on SuperModel master soon.  Until then, you'll need to use [this fork](https://github.com/andru/supermodel/), or set up associations manually (boo!).
-On the plus side, this saves you from defining your assocations twice.  You can define them manually if you don't want to use my fork, but I'm not documenting it. Check the source code, it's pretty simple.
-
-
 
 
 ## Differences from usual Supermodel associations
